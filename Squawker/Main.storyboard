@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8191" systemVersion="15A284" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="zls-L5-2Cf">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
+    </dependencies>
+    <scenes>
+        <!--Login View Controller-->
+        <scene sceneID="2I6-La-3PK">
+            <objects>
+                <viewController id="zls-L5-2Cf" customClass="LoginViewController" customModule="Squawker" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="TBT-hM-9GI"/>
+                        <viewControllerLayoutGuide type="bottom" id="nsP-Wn-ecC"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="kss-tY-AU7">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sL3-BM-cbQ">
+                                <rect key="frame" x="239" y="285" width="122" height="30"/>
+                                <animations/>
+                                <state key="normal" title="Login with Twitter"/>
+                                <connections>
+                                    <action selector="onLogin:" destination="zls-L5-2Cf" eventType="touchUpInside" id="I6b-Bh-Y5o"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <animations/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="sL3-BM-cbQ" firstAttribute="centerX" secondItem="kss-tY-AU7" secondAttribute="centerX" id="7fV-Q2-aVM"/>
+                            <constraint firstItem="sL3-BM-cbQ" firstAttribute="centerY" secondItem="kss-tY-AU7" secondAttribute="centerY" id="YgW-cm-lKg"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <segue destination="Mch-32-gWm" kind="presentation" identifier="loginSegue" id="dUq-Rp-U2n"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="fhT-o8-9sQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="810" y="121"/>
+        </scene>
+        <!--Tweets View Controller-->
+        <scene sceneID="d45-gW-At9">
+            <objects>
+                <viewController storyboardIdentifier="TweetsViewController" id="Mch-32-gWm" customClass="TweetsViewController" customModule="Squawker" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="ijQ-YW-2Ux"/>
+                        <viewControllerLayoutGuide type="bottom" id="R3h-bI-DaG"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="cCY-sk-ixf">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rTD-aP-THc">
+                                <rect key="frame" x="276" y="285" width="48" height="30"/>
+                                <animations/>
+                                <state key="normal" title="Logout"/>
+                                <connections>
+                                    <action selector="onLogout:" destination="Mch-32-gWm" eventType="touchUpInside" id="6Lb-jI-G5r"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <animations/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="rTD-aP-THc" firstAttribute="centerX" secondItem="cCY-sk-ixf" secondAttribute="centerX" id="6rp-yT-pwB"/>
+                            <constraint firstItem="rTD-aP-THc" firstAttribute="centerY" secondItem="cCY-sk-ixf" secondAttribute="centerY" id="ZEn-rb-8mN"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="gJy-xi-vXF" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1495" y="121"/>
+        </scene>
+    </scenes>
+</document>
