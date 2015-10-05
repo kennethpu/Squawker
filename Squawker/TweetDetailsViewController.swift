@@ -8,6 +8,10 @@
 
 import UIKit
 
+protocol TweetDetailsViewControllerDelegate {
+    func handleTweetUpdated(tweet: Tweet, cell: TweetsTableViewCell);
+}
+
 class TweetDetailsViewController: UIViewController {
 
     @IBOutlet weak var profileImageView: UIImageView!
@@ -22,7 +26,9 @@ class TweetDetailsViewController: UIViewController {
     @IBOutlet weak var retweetButton: UIButton!
     @IBOutlet weak var favoriteButton: UIButton!
     
-    var tweet: Tweet! 
+    var tweet: Tweet!
+    var cell: TweetsTableViewCell!
+    var delegate: TweetDetailsViewControllerDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,6 +36,10 @@ class TweetDetailsViewController: UIViewController {
         profileImageView.layer.cornerRadius = 3
         profileImageView.clipsToBounds = true
         
+        updateUI()
+    }
+    
+    func updateUI() {
         let request = NSURLRequest(URL: (tweet.author?.profileImageURL)!)
         weak var weakIV = profileImageView
         profileImageView.setImageWithURLRequest(request, placeholderImage: nil, success: { (request, response, image) -> Void in
@@ -59,5 +69,54 @@ class TweetDetailsViewController: UIViewController {
         let formatter = NSDateFormatter()
         formatter.dateFormat = "h:mm a - d MMM y"
         return formatter.stringFromDate(date)
+    }
+    
+    @IBAction func replyTapped(sender: AnyObject) {
+        
+    }
+    
+    @IBAction func retweetTapped(sender: AnyObject) {
+        
+        TwitterClient.sharedInstance.retweetTweetWithCompletion(tweet.idString!, completion: { (tweet: Tweet?, error: NSError?) -> () in
+            if tweet != nil {
+                self.retweetButton.selected = tweet!.retweeted!
+                self.retweetCountLabel.text = "\(tweet!.retweetCount!)"
+                
+                self.tweet.retweetCount = tweet!.retweetCount!
+                self.tweet.retweeted = tweet!.retweeted!
+                self.tweet.favoriteCount = tweet!.favoriteCount!
+                self.delegate?.handleTweetUpdated(self.tweet, cell: self.cell)
+            }
+        })
+    }
+    
+    @IBAction func favoriteTapped(sender: AnyObject) {
+        if favoriteButton.selected {
+            unfavoriteTweet(tweet.idString)
+        } else {
+            favoriteTweet(tweet.idString)
+        }
+    }
+    
+    func favoriteTweet(idString: String!) {
+        let params : NSDictionary = ["id": idString]
+        TwitterClient.sharedInstance.favoriteTweetWithCompletion(params, completion: { (tweet: Tweet?, error: NSError?) -> () in
+            if tweet != nil {
+                self.tweet = tweet!
+                self.updateUI()
+                self.delegate?.handleTweetUpdated(tweet!, cell: self.cell)
+            }
+        })
+    }
+    
+    func unfavoriteTweet(idString: String!) {
+        let params : NSDictionary = ["id": idString]
+        TwitterClient.sharedInstance.unfavoriteTweetWithCompletion(params, completion: { (tweet: Tweet?, error: NSError?) -> () in
+            if tweet != nil {
+                self.tweet = tweet!
+                self.updateUI()
+                self.delegate?.handleTweetUpdated(tweet!, cell: self.cell)
+            }
+        })
     }
 }

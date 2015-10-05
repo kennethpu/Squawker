@@ -8,6 +8,14 @@
 
 import UIKit
 
+protocol TweetsTableViewCellDelegate {
+    func handleTweetUpdatedForCell(tweet: Tweet, cell: TweetsTableViewCell);
+}
+
+let retweetedColor: UIColor = UIColor(red: 102.0/255, green: 167.0/255, blue: 68.0/255, alpha: 1.0)
+let favoritedColor: UIColor = UIColor(red: 253.0/255, green: 156.0/255, blue: 40.0/255, alpha: 1.0)
+let defaultColor: UIColor = UIColor(red: 102.0/255, green: 117.0/255, blue: 127.0/255, alpha: 1.0)
+
 class TweetsTableViewCell: UITableViewCell {
 
     @IBOutlet weak var profileImageView: UIImageView!
@@ -16,7 +24,11 @@ class TweetsTableViewCell: UITableViewCell {
     @IBOutlet weak var timestampLabel: UILabel!
     @IBOutlet weak var tweetTextLabel: UILabel!
     @IBOutlet weak var retweetButton: UIButton!
+    @IBOutlet weak var retweetCountLabel: UILabel!
     @IBOutlet weak var favoriteButton: UIButton!
+    @IBOutlet weak var favoriteCountLabel: UILabel!
+    
+    var delegate: TweetsTableViewCellDelegate?
     
     var tweet: Tweet! {
         didSet {
@@ -36,7 +48,11 @@ class TweetsTableViewCell: UITableViewCell {
             timestampLabel.text = self.formatTimeElapsed(tweet.createdAt!)
             tweetTextLabel.text = tweet.text
             retweetButton.selected = tweet.retweeted!
+            retweetCountLabel.text = "\(tweet.retweetCount!)"
+            retweetCountLabel.textColor = retweetButton.selected ? retweetedColor : defaultColor
             favoriteButton.selected = tweet.favorited!
+            favoriteCountLabel.text = "\(tweet.favoriteCount!)"
+            favoriteCountLabel.textColor = favoriteButton.selected ? favoritedColor : defaultColor
         }
     }
     
@@ -46,12 +62,6 @@ class TweetsTableViewCell: UITableViewCell {
         profileImageView.clipsToBounds = true
     }
 
-    override func setSelected(selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
-    }
-
     func formatTimeElapsed(sinceDate: NSDate) -> String {
         let formatter = NSDateComponentsFormatter()
         formatter.unitsStyle = NSDateComponentsFormatterUnitsStyle.Abbreviated
@@ -59,5 +69,52 @@ class TweetsTableViewCell: UITableViewCell {
         formatter.maximumUnitCount = 1
         let interval = NSDate().timeIntervalSinceDate(sinceDate)
         return formatter.stringFromTimeInterval(interval)!
+    }
+    
+    @IBAction func replyTapped(sender: AnyObject) {
+        
+    }
+    
+    @IBAction func retweetTapped(sender: AnyObject) {
+        TwitterClient.sharedInstance.retweetTweetWithCompletion(tweet.idString!, completion: { (tweet: Tweet?, error: NSError?) -> () in
+            if tweet != nil {
+                self.retweetButton.selected = tweet!.retweeted!
+                self.retweetCountLabel.text = "\(tweet!.retweetCount!)"
+                self.retweetCountLabel.textColor = retweetedColor
+                
+                self.tweet.retweetCount = tweet!.retweetCount!
+                self.tweet.retweeted = tweet!.retweeted!
+                self.tweet.favoriteCount = tweet!.favoriteCount!
+                self.delegate?.handleTweetUpdatedForCell(self.tweet, cell: self)
+            }
+        })
+    }
+    
+    @IBAction func favoriteTapped(sender: AnyObject) {
+        if favoriteButton.selected {
+            unfavoriteTweet(tweet.idString)
+        } else {
+            favoriteTweet(tweet.idString)
+        }
+    }
+    
+    func favoriteTweet(idString: String!) {
+        let params : NSDictionary = ["id": idString]
+        TwitterClient.sharedInstance.favoriteTweetWithCompletion(params, completion: { (tweet: Tweet?, error: NSError?) -> () in
+            if tweet != nil {
+                self.tweet = tweet!
+                self.delegate?.handleTweetUpdatedForCell(tweet!, cell: self)
+            }
+        })
+    }
+    
+    func unfavoriteTweet(idString: String!) {
+        let params : NSDictionary = ["id": idString]
+        TwitterClient.sharedInstance.unfavoriteTweetWithCompletion(params, completion: { (tweet: Tweet?, error: NSError?) -> () in
+            if tweet != nil {
+                self.tweet = tweet!
+                self.delegate?.handleTweetUpdatedForCell(tweet!, cell: self)
+            }
+        })
     }
 }

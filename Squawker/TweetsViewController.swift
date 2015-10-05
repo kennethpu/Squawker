@@ -48,6 +48,8 @@ class TweetsViewController: UIViewController {
         let indexPath = tableView.indexPathForCell(sender as! UITableViewCell)!
         
         destinationVC.tweet = tweets[indexPath.row]
+        destinationVC.cell = tableView.cellForRowAtIndexPath(indexPath) as! TweetsTableViewCell
+        destinationVC.delegate = self
     }
     
     @IBAction func onLogout(sender: AnyObject) {
@@ -64,7 +66,23 @@ extension TweetsViewController: UITableViewDataSource, UITableViewDelegate {
         let cell = tableView.dequeueReusableCellWithIdentifier("TweetsTableViewCell", forIndexPath: indexPath) as! TweetsTableViewCell
         
         cell.tweet = tweets[indexPath.row]
+        cell.delegate = self
         
         return cell
+    }
+}
+
+extension TweetsViewController: TweetsTableViewCellDelegate {
+    func handleTweetUpdatedForCell(tweet: Tweet, cell: TweetsTableViewCell) {
+        let indexPath = tableView.indexPathForCell(cell)!
+        tweets[indexPath.row] = tweet
+    }
+}
+
+extension TweetsViewController: TweetDetailsViewControllerDelegate {
+    func handleTweetUpdated(tweet: Tweet, cell: TweetsTableViewCell) {
+        let indexPath = tableView.indexPathForCell(cell)!
+        tweets[indexPath.row] = tweet
+        tableView.reloadData()
     }
 }
