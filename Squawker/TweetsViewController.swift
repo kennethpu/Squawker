@@ -50,7 +50,7 @@ class TweetsViewController: UIViewController {
             let indexPath = tableView.indexPathForCell(sender as! UITableViewCell)!
             
             destinationVC.tweet = tweets[indexPath.row]
-            destinationVC.cell = tableView.cellForRowAtIndexPath(indexPath) as! TweetsTableViewCell
+            destinationVC.index = indexPath.row
             destinationVC.delegate = self
         } else if segue.identifier == "NewTweetSegue" {
             let destinationVC = segue.destinationViewController as! TweetComposeViewController
@@ -96,9 +96,8 @@ extension TweetsViewController: TweetsTableViewCellDelegate {
 }
 
 extension TweetsViewController: TweetDetailsViewControllerDelegate {
-    func handleTweetUpdated(tweet: Tweet, cell: TweetsTableViewCell) {
-        let indexPath = tableView.indexPathForCell(cell)!
-        tweets[indexPath.row] = tweet
+    func handleTweetUpdatedForViewController(tweet: Tweet, index: Int) {
+        tweets[index] = tweet
         tableView.reloadData()
     }
     

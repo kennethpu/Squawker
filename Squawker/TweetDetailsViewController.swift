@@ -9,7 +9,7 @@
 import UIKit
 
 protocol TweetDetailsViewControllerDelegate {
-    func handleTweetUpdated(tweet: Tweet, cell: TweetsTableViewCell)
+    func handleTweetUpdatedForViewController(tweet: Tweet, index: Int)
     func callSegueFromViewController(tweet: Tweet)
 }
 
@@ -28,7 +28,7 @@ class TweetDetailsViewController: UIViewController {
     @IBOutlet weak var favoriteButton: UIButton!
     
     var tweet: Tweet!
-    var cell: TweetsTableViewCell!
+    var index: Int!
     var delegate: TweetDetailsViewControllerDelegate?
     
     override func viewDidLoad() {
@@ -85,7 +85,7 @@ class TweetDetailsViewController: UIViewController {
                 self.tweet.retweetCount = tweet!.retweetCount!
                 self.tweet.retweeted = tweet!.retweeted!
                 self.tweet.favoriteCount = tweet!.favoriteCount!
-                self.delegate?.handleTweetUpdated(self.tweet, cell: self.cell)
+                self.delegate?.handleTweetUpdatedForViewController(self.tweet, index: self.index)
             }
         })
     }
@@ -104,7 +104,7 @@ class TweetDetailsViewController: UIViewController {
             if tweet != nil {
                 self.tweet = tweet!
                 self.updateUI()
-                self.delegate?.handleTweetUpdated(tweet!, cell: self.cell)
+                self.delegate?.handleTweetUpdatedForViewController(tweet!, index: self.index)
             }
         })
     }
@@ -115,7 +115,7 @@ class TweetDetailsViewController: UIViewController {
             if tweet != nil {
                 self.tweet = tweet!
                 self.updateUI()
-                self.delegate?.handleTweetUpdated(tweet!, cell: self.cell)
+                self.delegate?.handleTweetUpdatedForViewController(tweet!, index: self.index)
             }
         })
     }
