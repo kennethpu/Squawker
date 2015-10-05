@@ -17,7 +17,7 @@ class User: NSObject {
     var dictionary: NSDictionary
     var name:String?
     var screenName: String?
-    var profileImageURL: String?
+    var profileImageURL: NSURL?
     var tagLine: String?
     
     init(dictionary: NSDictionary) {
@@ -25,7 +25,10 @@ class User: NSObject {
         
         name = dictionary["name"] as? String
         screenName = dictionary["screen_name"] as? String
-        profileImageURL = dictionary["profile_image_url"] as? String
+        let profileImageURLString = dictionary["profile_image_url"] as? String
+        if profileImageURLString != nil {
+            profileImageURL = NSURL(string: profileImageURLString!.stringByReplacingOccurrencesOfString("_normal", withString: "_bigger"))
+        }
         tagLine = dictionary["description"] as? String
     }
     

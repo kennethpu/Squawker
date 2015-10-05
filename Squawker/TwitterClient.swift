@@ -35,6 +35,7 @@ class TwitterClient: BDBOAuth1RequestOperationManager {
         self.GET("1.1/statuses/home_timeline.json", parameters:params, success: { (operation: AFHTTPRequestOperation!, responseObject: AnyObject!) -> Void in
             let tweets = Tweet.tweetsWithArray(responseObject as! [NSDictionary])
             completion(tweets: tweets, error: nil)
+//            print(responseObject)
         }, failure: { (operation: AFHTTPRequestOperation!, error: NSError!) -> Void in
             print("ERROR: Unable to get home timeline")
             completion(tweets: nil, error: error)

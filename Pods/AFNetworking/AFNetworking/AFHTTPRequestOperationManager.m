@@ -21,7 +21,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import <AFNetworking/AFHTTPRequestOperationManager.h>
+#import "AFHTTPRequestOperationManager.h"
 #import "AFHTTPRequestOperation.h"
 
 #import <Availability.h>
