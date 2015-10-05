@@ -46,7 +46,7 @@ class TwitterClient: BDBOAuth1RequestOperationManager {
             let tweet = Tweet(dictionary: responseObject as! NSDictionary)
             completion(tweet: tweet, error: nil)
         }, failure: { (operation: AFHTTPRequestOperation!, error: NSError!) -> Void in
-            print("ERROR: Unable to retweet Tweet")
+            print("ERROR: Unable to retweet Tweet\n\(error)")
             completion(tweet: nil, error:error)
         })
     }
@@ -65,8 +65,19 @@ class TwitterClient: BDBOAuth1RequestOperationManager {
         self.POST("1.1/favorites/destroy.json", parameters: params, success: { (operation: AFHTTPRequestOperation!, responseObject: AnyObject!) -> Void in
             let tweet = Tweet(dictionary: responseObject as! NSDictionary)
             completion(tweet: tweet, error: nil)
-            }, failure: { (operation: AFHTTPRequestOperation!, error: NSError!) -> Void in
+        }, failure: { (operation: AFHTTPRequestOperation!, error: NSError!) -> Void in
                 print("ERROR: Unable to unfavorite Tweet\n\(error)")
+                completion(tweet: nil, error:error)
+        })
+    }
+    
+    func tweetWithCompletion(params: NSDictionary?, completion: (tweet: Tweet?, error: NSError?) -> ()){
+        self.POST("1.1/statuses/update.json", parameters:params, success: { (operation: AFHTTPRequestOperation!, responseObject:
+            AnyObject!) -> Void in
+            let tweet = Tweet(dictionary: responseObject as! NSDictionary)
+            completion(tweet: tweet, error: nil)
+        }, failure: { (operation: AFHTTPRequestOperation!, error: NSError!) -> Void in
+                print("ERROR: Unable to post Tweet\n\(error)")
                 completion(tweet: nil, error:error)
         })
     }

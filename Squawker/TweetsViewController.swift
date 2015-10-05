@@ -14,6 +14,7 @@ class TweetsViewController: UIViewController {
     var refreshControl: UIRefreshControl!
     
     var tweets: [Tweet]!
+    var replyTweet: Tweet?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -44,12 +45,22 @@ class TweetsViewController: UIViewController {
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        let destinationVC = segue.destinationViewController as! TweetDetailsViewController
-        let indexPath = tableView.indexPathForCell(sender as! UITableViewCell)!
-        
-        destinationVC.tweet = tweets[indexPath.row]
-        destinationVC.cell = tableView.cellForRowAtIndexPath(indexPath) as! TweetsTableViewCell
-        destinationVC.delegate = self
+        if segue.identifier == "DetailSegue" {
+            let destinationVC = segue.destinationViewController as! TweetDetailsViewController
+            let indexPath = tableView.indexPathForCell(sender as! UITableViewCell)!
+            
+            destinationVC.tweet = tweets[indexPath.row]
+            destinationVC.cell = tableView.cellForRowAtIndexPath(indexPath) as! TweetsTableViewCell
+            destinationVC.delegate = self
+        } else if segue.identifier == "NewTweetSegue" {
+            let destinationVC = segue.destinationViewController as! TweetComposeViewController
+            
+            if replyTweet != nil {
+                destinationVC.replyTweet = replyTweet
+                replyTweet = nil
+            }
+            destinationVC.delegate = self
+        }
     }
     
     @IBAction func onLogout(sender: AnyObject) {
@@ -77,12 +88,29 @@ extension TweetsViewController: TweetsTableViewCellDelegate {
         let indexPath = tableView.indexPathForCell(cell)!
         tweets[indexPath.row] = tweet
     }
+    
+    func callSegueFromCell(tweet: Tweet) {
+        replyTweet = tweet
+        self.performSegueWithIdentifier("NewTweetSegue", sender: self)
+    }
 }
 
 extension TweetsViewController: TweetDetailsViewControllerDelegate {
     func handleTweetUpdated(tweet: Tweet, cell: TweetsTableViewCell) {
         let indexPath = tableView.indexPathForCell(cell)!
         tweets[indexPath.row] = tweet
+        tableView.reloadData()
+    }
+    
+    func callSegueFromViewController(tweet: Tweet) {
+        replyTweet = tweet
+        self.performSegueWithIdentifier("NewTweetSegue", sender: self)
+    }
+}
+
+extension TweetsViewController: TweetComposeViewControllerDelegate {
+    func handleTweetPosted(tweet: Tweet) {
+        tweets.insert(tweet, atIndex: 0)
         tableView.reloadData()
     }
 }

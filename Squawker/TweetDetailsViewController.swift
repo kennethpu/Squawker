@@ -9,7 +9,8 @@
 import UIKit
 
 protocol TweetDetailsViewControllerDelegate {
-    func handleTweetUpdated(tweet: Tweet, cell: TweetsTableViewCell);
+    func handleTweetUpdated(tweet: Tweet, cell: TweetsTableViewCell)
+    func callSegueFromViewController(tweet: Tweet)
 }
 
 class TweetDetailsViewController: UIViewController {
@@ -72,11 +73,10 @@ class TweetDetailsViewController: UIViewController {
     }
     
     @IBAction func replyTapped(sender: AnyObject) {
-        
+        self.delegate?.callSegueFromViewController(tweet)
     }
     
     @IBAction func retweetTapped(sender: AnyObject) {
-        
         TwitterClient.sharedInstance.retweetTweetWithCompletion(tweet.idString!, completion: { (tweet: Tweet?, error: NSError?) -> () in
             if tweet != nil {
                 self.retweetButton.selected = tweet!.retweeted!

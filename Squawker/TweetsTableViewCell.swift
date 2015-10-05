@@ -9,7 +9,8 @@
 import UIKit
 
 protocol TweetsTableViewCellDelegate {
-    func handleTweetUpdatedForCell(tweet: Tweet, cell: TweetsTableViewCell);
+    func handleTweetUpdatedForCell(tweet: Tweet, cell: TweetsTableViewCell)
+    func callSegueFromCell(tweet: Tweet)
 }
 
 let retweetedColor: UIColor = UIColor(red: 102.0/255, green: 167.0/255, blue: 68.0/255, alpha: 1.0)
@@ -61,7 +62,7 @@ class TweetsTableViewCell: UITableViewCell {
         profileImageView.layer.cornerRadius = 3
         profileImageView.clipsToBounds = true
     }
-
+    
     func formatTimeElapsed(sinceDate: NSDate) -> String {
         let formatter = NSDateComponentsFormatter()
         formatter.unitsStyle = NSDateComponentsFormatterUnitsStyle.Abbreviated
@@ -72,7 +73,7 @@ class TweetsTableViewCell: UITableViewCell {
     }
     
     @IBAction func replyTapped(sender: AnyObject) {
-        
+        self.delegate?.callSegueFromCell(tweet)
     }
     
     @IBAction func retweetTapped(sender: AnyObject) {
